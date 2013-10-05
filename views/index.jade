@@ -1,8 +1,86 @@
 extends layout
 
 block content
-  header.jumbotron.subhead#overview
-    .row
-        .span6
-            h1= title
-            p.lead Mini and minimalist.
+    //Full Page Image Header Area
+    .header
+        .vert-text
+            img(src="/images/logo.png")
+            br
+            br
+            br
+            a.btn.btn-default.btn-lg(href="#intro") Узнать больше
+    // /Full Page Image Header Area
+    //Intro
+    .intro#intro
+        .container
+            .row
+                .col-md-6.col-md-offset-3.text-center
+                    h2 Basket Rush&nbsp;&mdash; это инструмент для составления списка покупок
+                    p.lead Жена запишет все, чего не&nbsp;хватает в&nbsp;холодильнике. А&nbsp;муж не&nbsp;забудет после работы все это купить.
+                    a(href="#"): img(src="/images/android.png")
+    // /Intro
+    //Screens
+    .services
+        .container
+            .row
+                .col-md-4.col-md-offset-2.text-center
+                    .portfolio-item
+                        a(href="#"): img(src="/images/1.png")
+                        h4 &nbsp;
+                .col-md-4.text-center
+                    .portfolio-item
+                        a(href="#"): img(src="/images/2.png")
+                        h4 &nbsp;
+            .row
+                .col-md-4.col-md-offset-2.text-center
+                    .portfolio-item
+                        a(href="#"): img(src="/images/3.png")
+                .col-md-4.text-center
+                    .portfolio-item
+                        a(href="#"): img(src="/images/4.png")
+    // /Screens
+    //Callout
+    .callout
+    // /Callout
+    // Portfolio
+    .portfolio
+        .container
+            .row
+                .col-md-4.col-md-offset-4.text-center
+                    h2 Команда
+            .row
+                .col-md-4col-md-offset-2.text-center
+                    .portfolio-item
+                        a(href="#"): img.img-portfolio.img-responsive(src="/images/portfolio-1.jpg")
+                        h4 Айдар Габдуллин
+                .col-md-4.text-center
+                    .portfolio-item
+                        a(href="#"): img.img-portfolio.img-responsive(src="/images/portfolio-1.jpg")
+                        h4 Ильдар Хасанов
+            .row
+                .col-md-4col-md-offset-2.text-center
+                    .portfolio-item
+                        a(href="#"): img.img-portfolio.img-responsive(src="/images/portfolio-3.jpg")
+                        h4 Ильнур Ягудин
+                .col-md-4.text-center
+                    .portfolio-item
+                        a(href="#"): img.img-portfolio.img-responsive(src="/images/portfolio-4.jpg")
+                        h4 Дима Зюзин
+    // /Portfolio
+    //Call to Action
+    .call-to-action
+        .container
+            .row
+                .col-md-6.col-md-offset-3.text-center
+                    a(href="#"): img(src="/images/android.png")
+    // /Call to Action
+    // Footer
+    footer
+        .container
+            .row
+                .col-md-6.col-md-offset-3.text-center
+                    p &copy; Basket Rush 2013
+    // /Footer
+
+    script.
+        
