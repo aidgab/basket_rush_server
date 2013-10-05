@@ -5,16 +5,14 @@
  * Time: 16:14
  */
 var mongoose = require('mongoose'),
+    utils = require('./../helpers/utils'),
     Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
     login: String,
     secretkey: String,
     gender: String,
-    partner: {
-        type: String,
-        ref: 'User'
-    }
+    partner_login: String
 });
 
 UserSchema.statics.findOrCreate = function (condition, data, callback) {
@@ -31,6 +29,8 @@ UserSchema.statics.findOrCreate = function (condition, data, callback) {
         else {
             //Ok, but no such user - should create
             user=new User(data);
+            user.secretkey=utils.randomString(32);
+
             user.save(function(err) {
                 callback(err, user);
             });
