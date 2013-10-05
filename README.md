@@ -1,4 +1,4 @@
-basket_rush_server
+BasketRush server
 ===========
 
 2ida team's app. Collaborative family shopping list
@@ -14,4 +14,4 @@ API URI's:
 Install & Run:
 
     * sudo apt-get install mongodb
-    * 
+    * sudo PORT=80 pm start
