@@ -10,8 +10,10 @@ var http = require('http');
 var path = require('path');
 
 var app = express();
+var mongoose = require('mongoose');
 
 // all environments
+app.set('db_con_string', process.env.DBCONNSTRING || 'mongodb://localhost/basket_rush');
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -22,6 +24,8 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+mongoose.connect(app.get('db_con_string'));
+
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -29,6 +33,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+
+app.post('/users/create', user.create);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
