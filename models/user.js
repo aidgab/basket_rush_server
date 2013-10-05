@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
 var UserSchema = new Schema({
     login: String,
     secretkey: String,
+    push_id: String,
     gender: String,
     partner_login: String
 });

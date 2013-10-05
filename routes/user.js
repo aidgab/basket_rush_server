@@ -71,6 +71,21 @@ exports.addItem = function(req, res){
     });
 };
 
+exports.set_push_id=function(req, res){
+    loadUser(req.body.login,req.body.secret,function(err, user){
+        if (err || !user){
+            return res.status(403).send({error: 'Access denied'});
+        }
+        user.push_id=req.body.push_id;
+        user.save(function (err){
+            if (err){
+                return res.status(500).send({error: 'Error setting push_id of user #'+user._id})
+            }
+            res.send(user);
+        });
+    })
+};
+
 var loadUser=function(login, secret, callback){
     User.findOne({
         login: login,
