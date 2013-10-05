@@ -4,8 +4,9 @@
  */
 var User = require('./../models/user'),
     ShoppingList  = require('./../models/shopping_list'),
-    ListItems = require('./../models/list_items');
-
+    ListItems = require('./../models/list_items'),
+    PushNotificator=require('./../helpers/push_notificator')('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
+//todo refactor here. HARDCODE WARNING!
 
 exports.list = function(req, res){
   res.send("respond with a resource");
@@ -39,6 +40,7 @@ exports.list = function(req, res){
                         return res.status(500).send({error: 'Error fetching list items'});
                     }
                     res.send(items);
+                    PushNotificator.send({d: 1, test: 2});
                 });
             })
     });
@@ -65,7 +67,7 @@ exports.addItem = function(req, res){
                     if (err){
                         return res.status(500).send({error: 'Error fetching list items'});
                     }
-                    res.send(listItem)
+                    res.send(listItem);
                 });
         });
     });

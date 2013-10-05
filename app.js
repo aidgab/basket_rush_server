@@ -14,6 +14,7 @@ var mongoose = require('mongoose');
 
 // all environments
 app.set('db_con_string', process.env.DBCONNSTRING || 'mongodb://localhost/basket_rush');
+app.set('gcm_key', process.env.GCM_KEY || 'AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
