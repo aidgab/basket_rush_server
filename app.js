@@ -18,8 +18,6 @@ app.set('gcm_key', process.env.GCM_KEY || 'AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdp
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.favicon("public/images/favicon.ico"));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
