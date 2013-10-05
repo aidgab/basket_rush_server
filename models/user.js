@@ -9,7 +9,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-    login: String,
+    login: {
+        type: String,
+        required: true
+    },
     secretkey: String,
     push_id: String,
     gender: String,
