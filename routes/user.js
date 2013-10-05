@@ -71,6 +71,18 @@ exports.addItem = function(req, res){
     });
 };
 
+
+exports.remove_item = function (req, res){
+    //todo Проверить принадлежность пользователю
+    ListItems.remove({_id: req.body.item_id}, function(err){
+        if (err){
+            return res.status(500).send({error: 'Error during removing id'})
+        }
+
+        res.send({status: 'Ok. deleted'});
+    });
+}
+
 exports.set_push_id=function(req, res){
     loadUser(req.body.login,req.body.secret,function(err, user){
         if (err || !user){
@@ -91,4 +103,14 @@ var loadUser=function(login, secret, callback){
         login: login,
         secretkey: secret
     }, callback);
+};
+
+var loadListByUser = function(login, secret, callback){
+    loadUser(req.body.login,req.body.secret,function(err, user){
+        if (err || !user){
+            return callback(err, null);
+        }
+
+        ShoppingList.findOne({owners: user._id}, {owners: [user._id]}, callback);
+    });
 };

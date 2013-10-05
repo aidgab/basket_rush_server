@@ -7,6 +7,7 @@ API URI's:
 
     * Добавить id push-нотификации: /users/set_push_id (push_id)
     * Добавить элемент в список: /users/additem (data[title], data[count], data[photo])
+    * Удалить элемент из списка: /users/removeitem (item_id)
     * Получить список: /users/list
     * Зарегать юзера: /users/create (login, gender, partner_login)
 
