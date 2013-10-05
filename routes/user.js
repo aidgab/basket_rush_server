@@ -25,10 +25,7 @@ exports.create = function(req, res){
 }
 
 exports.list = function(req, res){
-    User.findOne({
-            login: req.body.login,
-            secretkey: req.body.secret
-        },
+    loadUser(req.body.login,req.body.secret,
         function(err, user){
             if (err || !user){
                 return res.status(403).send({error: 'Access denied'});
@@ -45,4 +42,38 @@ exports.list = function(req, res){
                 });
             })
     });
-}
+};
+
+exports.addItem = function(req, res){
+    loadUser(req.body.login,req.body.secret,function(err, user){
+        if (err || !user){
+            return res.status(403).send({error: 'Access denied'});
+        }
+
+
+        ShoppingList.findOne({owners: user._id}, {owners: [user._id]}, function(err, list){
+            if (err || !list){
+                return res.status(404).send({error: 'List not found'});
+            }
+            var listItem=new ListItems({
+                title: req.body.data.title,
+                count: req.body.data.count,
+                photo: req.body.data.photo,
+                _list: list._id
+            });
+            listItem.save(function (err){
+                    if (err){
+                        return res.status(500).send({error: 'Error fetching list items'});
+                    }
+                    res.send(listItem)
+                });
+        });
+    });
+};
+
+var loadUser=function(login, secret, callback){
+    User.findOne({
+        login: login,
+        secretkey: secret
+    }, callback);
+};
