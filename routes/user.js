@@ -56,6 +56,8 @@ exports.list = function(req, res){
 };
 
 exports.addItem = function(req, res){
+    console.log('Новый товар:');
+    console.log(req.body);
     loadUser(req.body.login,req.body.secret,function(err, user){
         if (err || !user){
             return res.status(403).send({error: 'Access denied'});
