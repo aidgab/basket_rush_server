@@ -75,6 +75,7 @@ exports.addItem = function(req, res){
                     }
                     User.findOne({_id: opponent_id}, function (err, opponent){
                         if (err){
+                            console.log(err);
                             return console.log('Error while notifying opponent');
                         }
                         sendPushMessage({
