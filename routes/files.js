@@ -6,7 +6,7 @@ exports.upload = function (req, res){
     var fileNames=Object.keys(req.files);
     easyimg.thumbnail({
         src: req.files[fileNames[0]].path,
-        dst: '48x_'+fileNames[0],
+        dst: 'public/userimages/48x_'+fileNames[0],
         width: 48,
         height: 48
     },
