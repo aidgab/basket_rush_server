@@ -157,5 +157,4 @@ var sendPushMessage = function(data, recipients){
     pushSender.send(message, recipients, 4, function (err, result) {
         console.log(result);
     });
-s
 };
