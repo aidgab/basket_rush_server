@@ -100,7 +100,7 @@ exports.addItem = function(req, res){
                         }
                         sendPushMessage({
                             action: 'item_added',
-                            message: 'Список пополнен',
+                            message: 'Купить '+listItem.title,
                             item: listItem
                         }, [opponent.push_id]);
                     });
@@ -168,7 +168,7 @@ exports.started_trip = function(req, res){
             }
         });
     });
-}
+};
 
 var loadUser=function(login, secret, callback){
     User.findOne({
