@@ -12,10 +12,16 @@ var pushSender = new gcm.Sender('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
 //todo refactor here. HARDCODE WARNING!
 
 exports.create = function(req, res){
-    req.body.partner_login=req.body.partner_login.replace(/ /g,'').replace('-','').replace('(','').replace(')','');
-    req.body.login=req.body.login.replace(/ /g,'').replace('-','').replace('(','').replace(')','');
+    var partner_login=req.body.partner_login.replace(/[ \-()]/g,''),
+        login=req.body.login.replace(/[ \-()]/g,'');
 
-    User.findOrCreate({login: req.body.login}, req.body, function (err, user){
+    console.log('registering user: ');
+    console.log(req.body);
+    User.findOrCreate({login: login}, {
+        login: login,
+        partner_login: partner_login,
+        gender: req.body.gender
+    }, function (err, user){
         if (err){
             res.status(500).send({
                 error: 'Server error occured'
@@ -23,6 +29,8 @@ exports.create = function(req, res){
             return;
         }
 
+        console.log('User registered:');
+        console.log(user);
         res.send(user);
     });
 }
