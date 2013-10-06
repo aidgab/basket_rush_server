@@ -14,5 +14,5 @@ API URI's:
     Все адреса, кроме /users/create просят дополнительных двух полей: login и secret - для авторизации пользователя
 Install & Run:
 
-    * sudo apt-get install mongodb
+    * sudo apt-get install mongodb imagemagick
     * sudo PORT=80 pm start

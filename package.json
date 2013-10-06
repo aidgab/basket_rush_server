@@ -9,6 +9,7 @@
     "express": "3.3.5",
     "mongoose": "latest",
     "node-gcm": "latest",
+    "easyimage": "latest",
     "jade": "*"
   }
 }
