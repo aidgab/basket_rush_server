@@ -23,6 +23,39 @@ var UserSchema = new Schema({
     }
 });
 
+UserSchema.statics.getOpponent = function (condition, callback) {
+    var User=this.model('User');
+    var ShoppingList=this.model('ShoppingList');
+    User.findOne(condition, function (err, user){
+        if (err || !user){
+            return console.log('Can not find user '+condtion);
+        }
+        //continue - search shopping list
+        ShoppingList.findOne({owners: user._id}, function(err, list){
+            var opponent_id;
+            console.log('List owners: ');
+            console.log(list.owners);
+            var owners= list.owners.map(function( ingredient ) {
+                return mongoose.Types.ObjectId(ingredient);
+            });
+
+            for (var i in owners){
+                if (owners[i]!=user._id){
+                    opponent_id=owners[i];
+                }
+                //Get opponent by id
+            }
+            User.findOne({_id: opponent_id}, function (err, opponent){
+                if (err){
+                    console.log(err);
+                    return console.log('Error while fetching opponent');
+                }
+                callback(err, user);
+            });
+        });
+    });
+};
+
 UserSchema.statics.findOrCreate = function (condition, data, callback) {
     //return this.model('Animal').find({ type: this.type }, cb);
     var User=this.model('User'),

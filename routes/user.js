@@ -107,7 +107,6 @@ exports.addItem = function(req, res){
                         }, [opponent.push_id]);
                     });
 
-
                     res.send(listItem);
             });
         });
@@ -117,12 +116,27 @@ exports.addItem = function(req, res){
 
 exports.remove_item = function (req, res){
     //todo Проверить принадлежность пользователю
-    ListItems.remove({_id: req.body.item_id}, function(err){
+    ListItems.find({_id: req.body.item_id}, function(err, item){
         if (err){
             return res.status(500).send({error: 'Error during removing id'})
         }
 
-        res.send({status: 'Ok. deleted'});
+        item.remove(function (err){
+            if (err){
+                return res.status(500).send({error: 'Error during removing id'})
+            }
+            res.send({status: 'Ok. deleted'});
+            User.getOpponent({login: req.body.login, secretkey: req.body.secretkey}, function(err, opponent){
+                if (err){
+                    return console.log('Can not fetch opponent!');
+                }
+                sendPushMessage({
+                    action: 'item_removed',
+                    message: 'Некупать '+item.title+' не нужно',
+                    item: item
+                }, [opponent.push_id]);
+            });
+        });
     });
 }
 
