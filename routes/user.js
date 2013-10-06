@@ -7,7 +7,7 @@ var User = require('./../models/user'),
     ListItems = require('./../models/list_items'),
     gcm = require('node-gcm');
 
-    //PushNotificator=require('./../helpers/push_notificator')('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
+var pushSender = new gcm.Sender('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
 //todo refactor here. HARDCODE WARNING!
 
 exports.create = function(req, res){
@@ -38,29 +38,6 @@ exports.list = function(req, res){
                         return res.status(500).send({error: 'Error fetching list items'});
                     }
                     res.send({items: items});
-
-                    // TEST SEND START
-                    var message = new gcm.Message({
-                        collapseKey: 'Посмотреть',
-                        data: {
-                            action: 'message1',
-                            message: 'Hello, push!'
-                        }
-                    });
-
-                    var sender = new gcm.Sender('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
-                    var registrationIds = [];
-
-                    // At least one required
-                    registrationIds.push(user.push_id);
-
-                    /**
-                     * Parameters: message-literal, registrationIds-array, No. of retries, callback-function
-                     */
-                    sender.send(message, registrationIds, 4, function (err, result) {
-                        console.log(result);
-                    });
-                    // TEST SEND END
                 });
             })
     });
@@ -87,8 +64,29 @@ exports.addItem = function(req, res){
                     if (err){
                         return res.status(500).send({error: 'Error fetching list items'});
                     }
+
+                    //Оповестить оппонента
+                    var opponent_id;
+                    for (var i in list.owners){
+                        if (list.owners[i]!=user._id){
+                            opponent_id=list.owners[i];
+                        }
+                        //Get opponent by id
+                    }
+                    User.findOne({_id: opponent_id}, function (err, opponent){
+                        if (err){
+                            return console.log('Error while notifying opponent');
+                        }
+                        sendPushMessage({
+                            action: 'item_added',
+                            message: 'Список пополнен',
+                            item: listItem
+                        }, [opponent.push_id]);
+                    });
+
+
                     res.send(listItem);
-                });
+            });
         });
     });
 };
@@ -135,4 +133,19 @@ var loadListByUser = function(login, secret, callback){
 
         ShoppingList.findOne({owners: user._id}, {owners: [user._id]}, callback);
     });
+};
+
+var sendPushMessage = function(data, recipients){
+    var message = new gcm.Message({
+        collapseKey: 'Посмотреть',
+        data: data
+    });
+
+    // At least one required
+    //registrationIds.push(user.push_id);
+
+    pushSender.send(message, recipients, 4, function (err, result) {
+        console.log(result);
+    });
+s
 };
