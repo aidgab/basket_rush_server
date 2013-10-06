@@ -16,12 +16,18 @@ var UserSchema = new Schema({
     secretkey: String,
     push_id: String,
     gender: String,
-    partner_login: String
+    partner_login: String,
+    _partner: {
+        type: String,
+        ref: 'User'
+    }
 });
 
 UserSchema.statics.findOrCreate = function (condition, data, callback) {
     //return this.model('Animal').find({ type: this.type }, cb);
-    var User=this.model('User');
+    var User=this.model('User'),
+        ShoppingList=this.model('ShoppingList');
+
     User.findOne(condition, function (err, user){
         if (err){
             callback(err, user);
@@ -35,8 +41,32 @@ UserSchema.statics.findOrCreate = function (condition, data, callback) {
             user=new User(data);
             user.secretkey=utils.randomString(32);
 
-            user.save(function(err) {
-                callback(err, user);
+            User.findOne({login: user.partner_login}, function (err, partner){
+                if (err || !partner){
+                    user.save(function(err) {
+                        callback(err, user);
+                    });
+                }
+                else {
+                    //Партнёр найден - будем вязать
+                    user._partner=partner._id;
+                    user.save(function(err) {
+                        //перевязываем листы
+                        ShoppingList.findOne({owners: partner._id}, function(err, list){
+                            if (list){
+                                list.owners.push(user._id);
+                                list.save(function (err){
+                                    return callback(err, user);
+                                })
+                            }
+                            else {
+                                callback(err, user);
+                            }
+                        });
+
+                    });
+
+                }
             });
         }
     });
