@@ -67,12 +67,16 @@ exports.addItem = function(req, res){
 
                     //Оповестить оппонента
                     var opponent_id;
+                    console.log('List owners: ');
+                    console.log(list.owners);
                     for (var i in list.owners){
                         if (list.owners[i]!=user._id){
                             opponent_id=list.owners[i];
                         }
                         //Get opponent by id
                     }
+
+                    console.log('Opponent id: '+opponent_id);
                     User.findOne({_id: opponent_id}, function (err, opponent){
                         if (err){
                             console.log(err);
