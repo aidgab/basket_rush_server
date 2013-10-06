@@ -2,7 +2,8 @@
 /*
  * GET users listing.
  */
-var User = require('./../models/user'),
+var mongoose = require('mongoose'),
+    User = require('./../models/user'),
     ShoppingList  = require('./../models/shopping_list'),
     ListItems = require('./../models/list_items'),
     gcm = require('node-gcm');
@@ -69,9 +70,13 @@ exports.addItem = function(req, res){
                     var opponent_id;
                     console.log('List owners: ');
                     console.log(list.owners);
-                    for (var i in list.owners){
-                        if (list.owners[i]!=user._id){
-                            opponent_id=list.owners[i];
+                    var owners= list.owners.map(function( ingredient ) {
+                        return mongoose.Types.ObjectId(ingredient);
+                    });
+
+                    for (var i in owners){
+                        if (owners[i]!=user._id){
+                            opponent_id=owners[i];
                         }
                         //Get opponent by id
                     }
