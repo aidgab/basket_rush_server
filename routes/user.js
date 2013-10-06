@@ -10,10 +10,6 @@ var User = require('./../models/user'),
     //PushNotificator=require('./../helpers/push_notificator')('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
 //todo refactor here. HARDCODE WARNING!
 
-exports.list = function(req, res){
-  res.send("respond with a resource");
-};
-
 exports.create = function(req, res){
     User.findOrCreate({login: req.body.login}, req.body, function (err, user){
         if (err){
@@ -41,10 +37,9 @@ exports.list = function(req, res){
                     if (err){
                         return res.status(500).send({error: 'Error fetching list items'});
                     }
-                    res.send(items);
+                    res.send({items: items});
 
                     // TEST SEND START
-                    var message = new gcm.Message();
 
 // or with object values
                     var message = new gcm.Message({
