@@ -12,6 +12,9 @@ var pushSender = new gcm.Sender('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
 //todo refactor here. HARDCODE WARNING!
 
 exports.create = function(req, res){
+    req.body.partner_login=req.body.partner_login.replace(/ /g,'').replace('-','').replace('(','').replace(')','');
+    req.body.login=req.body.login.replace(/ /g,'').replace('-','').replace('(','').replace(')','');
+
     User.findOrCreate({login: req.body.login}, req.body, function (err, user){
         if (err){
             res.status(500).send({
@@ -81,7 +84,7 @@ exports.addItem = function(req, res){
                         //Get opponent by id
                     }
 
-                    console.log('Opponent id: '+opponent_id);
+                    console.log('Opponent id:  '+opponent_id);
                     User.findOne({_id: opponent_id}, function (err, opponent){
                         if (err){
                             console.log(err);
@@ -127,6 +130,37 @@ exports.set_push_id=function(req, res){
         });
     })
 };
+
+//Я поехал
+exports.started_trip = function(req, res){
+    var msg={
+        action: 'started_trip',
+        message: 'Я поехал в магазин!'
+    };
+    res.send(msg);
+
+    loadUser(req.body.login, req.body.secretkey, function (err, user){
+        var opponent_id;
+        loadListByUser(req.body.login, req.body.secretkey,function (err, list){
+            if (err){
+                return console.log('Error fetching opponent\'s id');
+            }
+            var owners= list.owners.map(function( ingredient ) {
+                return mongoose.Types.ObjectId(ingredient);
+            });
+
+            for (var i in owners){
+                if (owners[i]!=user._id){
+                    opponent_id=owners[i];
+                }
+                //Get opponent by id
+                User.findOne({_id: opponent_id}, function (err, opponent){
+                    sendPushMessage(msg, [opponent.push_id]);
+                });
+            }
+        });
+    });
+}
 
 var loadUser=function(login, secret, callback){
     User.findOne({
