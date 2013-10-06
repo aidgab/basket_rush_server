@@ -5,7 +5,9 @@
 var User = require('./../models/user'),
     ShoppingList  = require('./../models/shopping_list'),
     ListItems = require('./../models/list_items'),
-    PushNotificator=require('./../helpers/push_notificator')('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
+    gcm = require('node-gcm');
+
+    //PushNotificator=require('./../helpers/push_notificator')('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
 //todo refactor here. HARDCODE WARNING!
 
 exports.list = function(req, res){
@@ -40,7 +42,55 @@ exports.list = function(req, res){
                         return res.status(500).send({error: 'Error fetching list items'});
                     }
                     res.send(items);
-                    PushNotificator.send({d: 1, test: 2});
+
+                    // TEST SEND START
+                    var message = new gcm.Message();
+
+// or with object values
+                    var message = new gcm.Message({
+                        collapseKey: 'demo',
+                        delayWhileIdle: true,
+                        timeToLive: 3,
+                        data: {
+                            key1: 'message1',
+                            key2: 'message2'
+                        }
+                    });
+
+                    var sender = new gcm.Sender('AIzaSyCMlwvZkdVDIKqexsH3qeG2MwCzPbtdpX4');
+                    var registrationIds = [];
+
+// Optional
+// add new key-value in data object
+                    message.addDataWithKeyValue('key1','message1');
+                    message.addDataWithKeyValue('key2','message2');
+
+// or add a data object
+                    message.addDataWithObject({
+                        key1: 'message1',
+                        key2: 'message2'
+                    });
+
+// or with backwards compability of previous versions
+                    message.addData('key1','message1');
+                    message.addData('key2','message2');
+
+
+                    message.collapseKey = 'demo';
+                    message.delayWhileIdle = true;
+                    message.timeToLive = 3;
+// END Optional
+
+// At least one required
+                    registrationIds.push(user.push_id);
+
+                    /**
+                     * Parameters: message-literal, registrationIds-array, No. of retries, callback-function
+                     */
+                    sender.send(message, registrationIds, 4, function (err, result) {
+                        console.log(result);
+                    });
+                    // TEST SEND END
                 });
             })
     });
