@@ -88,7 +88,9 @@ exports.addItem = function(req, res){
                     });
 
                     for (var i in owners){
-                        if (owners[i]!=user._id){
+                        if (owners[i].toString()!=user._id.toString()){
+                            console.log('me='+user._id);
+                            console.log('opponent='+owners[i]);
                             opponent_id=owners[i];
                         }
                         //Get opponent by id
@@ -116,7 +118,7 @@ exports.addItem = function(req, res){
 
 exports.remove_item = function (req, res){
     //todo Проверить принадлежность пользователю
-    ListItems.find({_id: req.body.item_id}, function(err, item){
+    ListItems.findOne({_id: req.body.item_id}, function(err, item){
         if (err){
             return res.status(500).send({error: 'Error during removing id'})
         }
@@ -150,6 +152,8 @@ exports.set_push_id=function(req, res){
             if (err){
                 return res.status(500).send({error: 'Error setting push_id of user #'+user._id})
             }
+            console.log('Push_id of user '+user.login+' set to: '+req.body.push_id);
+            console.log('Became: '+user.push_id);
             res.send(user);
         });
     })
@@ -212,7 +216,11 @@ var sendPushMessage = function(data, recipients){
     // At least one required
     //registrationIds.push(user.push_id);
 
+    console.log('Sending push notification to:');
+    console.log(recipients);
     pushSender.send(message, recipients, 4, function (err, result) {
+        console.log('Error sending push notification');
+        console.log(err);
         console.log(result);
     });
 };
